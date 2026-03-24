@@ -1,0 +1,68 @@
+
+> racing-site@0.1.0 dev
+> next dev
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.63:3000
+
+✓ Starting...
+Creating turbopack project { dir: 'C:\\Users\\frizi\\racing-site', testMode: true }
+✓ Ready in 1072ms
+ GET / 200 in 567ms (compile: 298ms, render: 268ms)
+ GET /series/wrc 200 in 100s (compile: 100s, render: 95ms)
+ GET /drivers 200 in 100s (compile: 40ms, render: 100s)
+ GET / 200 in 427ms (compile: 8ms, render: 420ms)
+ GET /drivers 200 in 465ms (compile: 148ms, render: 317ms)
+ GET / 200 in 494ms (compile: 32ms, render: 462ms)
+ GET /series/wrc 200 in 110ms (compile: 13ms, render: 97ms)
+ GET /events/wrc-2026-04-10-wrc-croatia-rally-2026 200 in 98s (compile: 610ms, render: 98s)
+ GET /events/wrc-2026-04-10-wrc-croatia-rally-2026 200 in 389ms (compile: 11ms, render: 378ms)
+ GET /series/wrc 200 in 47ms (compile: 13ms, render: 35ms)
+ GET /events/wrc-2026-04-23-wrc-rally-islas-canarias-2026 200 in 464ms (compile: 9ms, render: 455ms)
+ GET /drivers 200 in 92ms (compile: 3ms, render: 89ms)
+ GET /drivers/carlos-sainz 200 in 537ms (compile: 493ms, render: 44ms)
+ GET /drivers/adrian-newey 200 in 30ms (compile: 8ms, render: 22ms)
+ GET /drivers/wrc-adrien-fourmaux 200 in 44ms (compile: 12ms, render: 32ms)
+ GET /series 200 in 76ms (compile: 35ms, render: 42ms)
+ GET / 200 in 22ms (compile: 2ms, render: 19ms)
+ GET /series/f1 200 in 29ms (compile: 10ms, render: 20ms)
+ GET / 200 in 22ms (compile: 2ms, render: 20ms)
+ GET /series/wrc 200 in 31ms (compile: 8ms, render: 23ms)
+ GET /events/wrc-2026-04-10-wrc-croatia-rally-2026 200 in 32ms (compile: 9ms, render: 23ms)
+ GET /drivers/wrc-thierry-neuville 200 in 33ms (compile: 9ms, render: 24ms)
+ GET /series/wrc 200 in 99s (compile: 107ms, render: 99s)
+ GET /series/wrc 200 in 144ms (compile: 12ms, render: 132ms)
+ GET /series/wrc 200 in 143ms (compile: 90ms, render: 53ms)
+ GET /series/wrc 200 in 145ms (compile: 41ms, render: 104ms)
+ GET /series/wrc 200 in 145ms (compile: 66ms, render: 79ms)
+ GET /series/wrc 200 in 145ms (compile: 112ms, render: 33ms)
+ GET /drivers 200 in 176ms (compile: 71ms, render: 105ms)
+✓ Compiled in 15ms
+ GET / 200 in 436ms (compile: 61ms, render: 375ms)
+ GET /events 200 in 99s (compile: 37ms, render: 99s)
+ GET / 200 in 438ms (compile: 87ms, render: 351ms)
+ GET /drivers 200 in 463ms (compile: 157ms, render: 306ms)
+ GET /drivers 200 in 94ms (compile: 3ms, render: 91ms)
+TypeError: fetch failed
+    at ignore-listed frames {
+  [cause]: Error: Client network socket disconnected before secure TLS connection was established
+      at ignore-listed frames {
+    code: 'ECONNRESET',
+    path: undefined,
+    host: 'www.wrc.com',
+    port: 443,
+    localAddress: null
+  }
+}
+ GET / 200 in 103s (compile: 98ms, render: 102s)
+ GET /events 200 in 3.4min (compile: 58ms, render: 3.4min)
+ GET /events 200 in 103s (compile: 333ms, render: 102s)
+ GET / 200 in 103s (compile: 57ms, render: 103s)
+TypeError: fetch failed
+    at ignore-listed frames {
+  [cause]: Error [ConnectTimeoutError]: Connect Timeout Error (attempted addresses: 23.60.69.80:443, 23.60.69.104:443, timeout: 10000ms)
+      at ignore-listed frames {
+    code: 'UND_ERR_CONNECT_TIMEOUT'
+  }
+}
