@@ -1,4 +1,6 @@
 import { Race } from "./types";
+import { f1FallbackRaces } from "./f1Fallback";
+import { ENABLE_LIVE_IMPORTS, LIVE_IMPORT_TIMEOUT_MS } from "./importConfig";
 
 export const F1_ICS_URL =
   "https://ics.ecal.com/ecal-sub/69a9e7a65ec2750002972bf4/Formula%201.ics";
@@ -100,6 +102,10 @@ function parseIcsEvents(icsText: string) {
 }
 
 export async function getF1Races(): Promise<Race[]> {
+  if (!ENABLE_LIVE_IMPORTS) {
+    return f1FallbackRaces;
+  }
+
   if (f1Cache && f1Cache.expiresAt > Date.now()) {
     return f1Cache.races;
   }
@@ -109,47 +115,61 @@ export async function getF1Races(): Promise<Race[]> {
   }
 
   f1InFlight = (async () => {
-    const response = await fetch(F1_ICS_URL, {
-      signal: AbortSignal.timeout(8000),
-      next: { revalidate: 3600 },
-    });
+    let races = f1FallbackRaces;
 
-    if (!response.ok) {
-      throw new Error(`Failed to load F1 ICS: ${response.status}`);
+    try {
+      const response = await fetch(F1_ICS_URL, {
+        signal: AbortSignal.timeout(LIVE_IMPORT_TIMEOUT_MS),
+        next: { revalidate: 3600 },
+      });
+
+      if (response.ok) {
+        const icsText = await response.text();
+        const events = parseIcsEvents(icsText);
+        const importedRaces = events
+          .filter((event) => event.summary && event.dtstart)
+          .map((event) => {
+            const title = String(event.summary).trim();
+            const startDate = toISODate(String(event.dtstart));
+            const endDate = event.dtend ? toISODate(String(event.dtend)) : undefined;
+            const rawLocation = event.location ? String(event.location).trim() : "TBA";
+            const { city, country, venue } = parseLocation(rawLocation);
+
+            return {
+              id: `f1-${startDate}-${slugify(title)}`,
+              title,
+              startDate,
+              endDate,
+              location: rawLocation,
+              country,
+              city,
+              venue,
+              region: "World" as const,
+              series: "F1" as const,
+              latviaInvolved: false,
+              latvianDrivers: [],
+              description:
+                "Official Formula 1 World Championship event imported automatically from the F1 ICS calendar.",
+              source: {
+                type: "imported" as const,
+                label: "Official Formula 1 calendar import",
+                url: F1_ICS_URL,
+              },
+              links: { official: "https://www.formula1.com/en/racing/2026" },
+              featured: title.toLowerCase().includes("monaco") || title.toLowerCase().includes("british"),
+              popularityScore: 92,
+            } satisfies Race;
+          })
+          .filter((race) => race.startDate.startsWith("2026-"))
+          .sort((a, b) => a.startDate.localeCompare(b.startDate));
+
+        if (importedRaces.length >= 10) {
+          races = importedRaces;
+        }
+      }
+    } catch {
+      races = f1FallbackRaces;
     }
-
-    const icsText = await response.text();
-    const events = parseIcsEvents(icsText);
-
-    const races = events
-      .filter((event) => event.summary && event.dtstart)
-      .map((event) => {
-        const title = String(event.summary).trim();
-        const startDate = toISODate(String(event.dtstart));
-        const endDate = event.dtend ? toISODate(String(event.dtend)) : undefined;
-        const rawLocation = event.location ? String(event.location).trim() : "TBA";
-        const { city, country, venue } = parseLocation(rawLocation);
-
-        return {
-          id: `f1-${startDate}-${slugify(title)}`,
-          title,
-          startDate,
-          endDate,
-          location: rawLocation,
-          country,
-          city,
-          venue,
-          region: "World" as const,
-          series: "F1" as const,
-          latviaInvolved: false,
-          latvianDrivers: [],
-          description:
-            "Official Formula 1 World Championship event imported automatically from the F1 ICS calendar.",
-          links: { official: "https://www.formula1.com/en/racing/2026" },
-        } satisfies Race;
-      })
-      .filter((race) => race.startDate.startsWith("2026-"))
-      .sort((a, b) => a.startDate.localeCompare(b.startDate));
 
     f1Cache = {
       expiresAt: Date.now() + F1_CACHE_TTL_MS,

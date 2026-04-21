@@ -1,4 +1,5 @@
 import { Race } from "./types";
+import { ENABLE_LIVE_IMPORTS, LIVE_IMPORT_TIMEOUT_MS } from "./importConfig";
 import { wrcFallbackRaces } from "./wrcFallback";
 
 export const WRC_CALENDAR_URL = "https://www.wrc.com/en/calendar?rb3TabId=upcoming";
@@ -50,6 +51,22 @@ async function fetchWithTimeout(url: string, init: RequestInit, timeoutMs: numbe
 
 function slugify(s: string) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+}
+
+function hasLatvianWrcProgramme(title: string) {
+  const value = title.toLowerCase();
+
+  return (
+    value.includes("sweden") ||
+    value.includes("portugal") ||
+    value.includes("acropolis") ||
+    value.includes("greece") ||
+    value.includes("estonia") ||
+    value.includes("finland") ||
+    value.includes("sardegna") ||
+    value.includes("sardinia") ||
+    value.includes("saudi")
+  );
 }
 
 function decodeHtml(value: string) {
@@ -159,6 +176,10 @@ function extractCards(html: string) {
 }
 
 export async function getWRCRaces(): Promise<Race[]> {
+  if (!ENABLE_LIVE_IMPORTS) {
+    return wrcFallbackRaces;
+  }
+
   if (wrcRaceCache && wrcRaceCache.expiresAt > Date.now()) {
     return wrcRaceCache.races;
   }
@@ -176,30 +197,37 @@ export async function getWRCRaces(): Promise<Race[]> {
         headers: {
           "user-agent": "Mozilla/5.0 (compatible; RaceHubBot/1.0)",
         },
-      }, 5000);
+      }, LIVE_IMPORT_TIMEOUT_MS);
 
       if (response.ok) {
         const html = await response.text();
         const cards = extractCards(html);
         const parsed = cards
-          .map((card) => ({
-            id: `wrc-${card.startDate}-${slugify(card.title)}`,
-            title: card.title,
-            startDate: card.startDate,
-            location: card.country,
-            country: card.country,
-            city: card.country,
-            region: "World" as const,
-            series: "WRC" as const,
-            latviaInvolved:
-              card.title.toLowerCase().includes("estonia") || card.title.toLowerCase().includes("finland"),
-            latvianDrivers:
-              card.title.toLowerCase().includes("estonia") || card.title.toLowerCase().includes("finland")
-                ? ["sesks"]
-                : [],
-            description: "Official World Rally Championship event imported automatically from the WRC calendar.",
-            links: { official: `${WRC_BASE_URL}${card.href}` },
-          }))
+          .map((card) => {
+            const latviaInvolved = hasLatvianWrcProgramme(card.title);
+
+            return {
+              id: `wrc-${card.startDate}-${slugify(card.title)}`,
+              title: card.title,
+              startDate: card.startDate,
+              location: card.country,
+              country: card.country,
+              city: card.country,
+              region: "World" as const,
+              series: "WRC" as const,
+              latviaInvolved,
+              latvianDrivers: latviaInvolved ? ["martins-sesks", "renars-francis"] : [],
+              description: "Official World Rally Championship event imported automatically from the WRC calendar.",
+              source: {
+                type: "imported" as const,
+                label: "Official WRC calendar import",
+                url: WRC_CALENDAR_URL,
+              },
+              links: { official: `${WRC_BASE_URL}${card.href}` },
+              featured: latviaInvolved,
+              popularityScore: latviaInvolved ? 94 : 90,
+            };
+          })
           .filter((race) => race.startDate.startsWith("2026-"))
           .sort((a, b) => a.startDate.localeCompare(b.startDate));
 
@@ -227,6 +255,10 @@ export async function getWRCRaces(): Promise<Race[]> {
 }
 
 export async function getWRCEventDetails(url: string): Promise<WRCEventDetails | null> {
+  if (!ENABLE_LIVE_IMPORTS) {
+    return null;
+  }
+
   const cached = wrcEventCache.get(url);
   if (cached && cached.expiresAt > Date.now()) {
     return cached.details;
@@ -244,7 +276,7 @@ export async function getWRCEventDetails(url: string): Promise<WRCEventDetails |
       headers: {
         "user-agent": "Mozilla/5.0 (compatible; RaceHubBot/1.0)",
       },
-      }, 5000);
+      }, LIVE_IMPORT_TIMEOUT_MS);
 
       if (!response.ok) {
         return null;

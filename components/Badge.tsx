@@ -5,13 +5,13 @@ export function Badge({
   children: React.ReactNode;
   tone?: "neutral" | "hot" | "lv" | "world";
 }) {
-  const base =
-    "inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold border";
+  const base = "inline-flex items-center rounded-full border px-2.5 py-1 text-[11px] font-semibold tracking-[0.14em] uppercase";
   const map: Record<string, string> = {
-    neutral: "border-white/15 text-white/80 bg-white/5",
-    hot: "border-orange-500/30 text-orange-200 bg-orange-500/10",
-    lv: "border-red-500/30 text-red-200 bg-red-500/10",
-    world: "border-sky-500/30 text-sky-200 bg-sky-500/10",
+    neutral: "border-white/10 bg-white/5 text-white/70",
+    hot: "border-orange-400/30 bg-orange-500/12 text-orange-100",
+    lv: "border-red-400/30 bg-red-500/12 text-red-100",
+    world: "border-sky-400/30 bg-sky-500/12 text-sky-100",
   };
+
   return <span className={`${base} ${map[tone]}`}>{children}</span>;
 }

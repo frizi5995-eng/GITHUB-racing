@@ -1,169 +1,226 @@
 import { Driver } from "./types";
 
+type WrcPersonInput = {
+  id: string;
+  name: string;
+  role?: Driver["role"];
+  team: string;
+  nationality: string;
+  achievements?: string[];
+  bio?: string;
+  featured?: boolean;
+};
+
+function wrcPerson(input: WrcPersonInput): Driver {
+  const role = input.role ?? "Driver";
+
+  return {
+    id: input.id,
+    name: input.name,
+    discipline: "Rally",
+    achievements: input.achievements ?? [
+      `Current WRC Rally1 ${role.toLowerCase()} for ${input.team}.`,
+      "Included in RaceHub's WRC roster so rally event pages connect to real world championship people.",
+    ],
+    active: true,
+    role,
+    team: input.team,
+    nationality: input.nationality,
+    series: "WRC",
+    currentSeries: ["WRC", "Rally"],
+    bio:
+      input.bio ??
+      `${input.name} is tracked as part of the WRC Rally1 field, giving the driver directory broader world rally coverage beyond the Latvian profiles.`,
+    featured: input.featured,
+  };
+}
+
 export const wrcPeople: Driver[] = [
-  {
-    id: "wrc-adrien-fourmaux",
-    name: "Adrien Fourmaux",
-    discipline: "Rally",
-    achievements: [
-      "Official WRC Rally1 driver for Hyundai in the 2026 season.",
-      "Front-running pace on asphalt and mixed-surface rallies.",
-    ],
-    active: true,
-    role: "Driver",
-    team: "Hyundai Shell Mobis World Rally Team",
+  wrcPerson({
+    id: "wrc-sebastien-ogier",
+    name: "Sebastien Ogier",
+    team: "Toyota Gazoo Racing WRT",
     nationality: "France",
-    series: "WRC",
-    bio: "French Rally1 driver competing in Hyundai's world championship programme.",
-  },
-  {
-    id: "wrc-esapekka-lappi",
-    name: "Esapekka Lappi",
-    discipline: "Rally",
-    achievements: [
-      "Official WRC Rally1 driver for Hyundai in the 2026 season.",
-      "Experienced world-level rally winner with strong gravel speed.",
-    ],
-    active: true,
-    role: "Driver",
-    team: "Hyundai Shell Mobis World Rally Team",
+    achievements: ["Nine-time WRC champion.", "Toyota Gazoo Racing Rally1 driver in the 2026 field."],
+    featured: true,
+  }),
+  wrcPerson({
+    id: "wrc-vincent-landais",
+    name: "Vincent Landais",
+    role: "Co-Driver",
+    team: "Toyota Gazoo Racing WRT",
+    nationality: "France",
+    achievements: ["WRC champion co-driver with Sebastien Ogier.", "Toyota Gazoo Racing Rally1 co-driver."],
+  }),
+  wrcPerson({
+    id: "wrc-elfyn-evans",
+    name: "Elfyn Evans",
+    team: "Toyota Gazoo Racing WRT",
+    nationality: "United Kingdom",
+    achievements: ["Multiple WRC rally winner.", "Toyota Gazoo Racing championship contender."],
+    featured: true,
+  }),
+  wrcPerson({
+    id: "wrc-scott-martin",
+    name: "Scott Martin",
+    role: "Co-Driver",
+    team: "Toyota Gazoo Racing WRT",
+    nationality: "United Kingdom",
+  }),
+  wrcPerson({
+    id: "wrc-takamoto-katsuta",
+    name: "Takamoto Katsuta",
+    team: "Toyota Gazoo Racing WRT",
+    nationality: "Japan",
+    achievements: ["Toyota Gazoo Racing Rally1 driver.", "Japan's leading top-class WRC representative."],
+  }),
+  wrcPerson({
+    id: "wrc-aaron-johnston",
+    name: "Aaron Johnston",
+    role: "Co-Driver",
+    team: "Toyota Gazoo Racing WRT",
+    nationality: "Ireland",
+  }),
+  wrcPerson({
+    id: "wrc-sami-pajari",
+    name: "Sami Pajari",
+    team: "Toyota Gazoo Racing WRT2",
     nationality: "Finland",
-    series: "WRC",
-    bio: "Finnish Rally1 driver bringing proven WRC pace and experience to Hyundai's line-up.",
-  },
-  {
+    achievements: ["WRC2 champion graduate.", "Toyota Rally1 driver with a developing full-season programme."],
+  }),
+  wrcPerson({
+    id: "wrc-marko-salminen",
+    name: "Marko Salminen",
+    role: "Co-Driver",
+    team: "Toyota Gazoo Racing WRT2",
+    nationality: "Finland",
+  }),
+  wrcPerson({
+    id: "wrc-oliver-solberg",
+    name: "Oliver Solberg",
+    team: "Toyota Gazoo Racing WRT",
+    nationality: "Sweden",
+    achievements: ["WRC2 title winner.", "Toyota Rally1 driver in the 2026 field."],
+    featured: true,
+  }),
+  wrcPerson({
+    id: "wrc-elliott-edmondson",
+    name: "Elliott Edmondson",
+    role: "Co-Driver",
+    team: "Toyota Gazoo Racing WRT",
+    nationality: "United Kingdom",
+  }),
+  wrcPerson({
     id: "wrc-thierry-neuville",
     name: "Thierry Neuville",
-    discipline: "Rally",
-    achievements: [
-      "Official WRC Rally1 driver for Hyundai in the 2026 season.",
-      "One of the defining championship contenders of the modern WRC era.",
-    ],
-    active: true,
-    role: "Driver",
     team: "Hyundai Shell Mobis World Rally Team",
     nationality: "Belgium",
-    series: "WRC",
-    bio: "Belgian WRC star known for title fights, precision on tarmac and full-season championship campaigns.",
-  },
-  {
-    id: "wrc-hayden-paddon",
-    name: "Hayden Paddon",
-    discipline: "Rally",
-    achievements: [
-      "Official WRC Rally1 driver for Hyundai in the 2026 season.",
-      "International rally winner with deep gravel and rough-condition experience.",
-    ],
-    active: true,
-    role: "Driver",
+    achievements: ["WRC champion and long-time Hyundai leader.", "One of the defining championship contenders of the modern WRC era."],
+    featured: true,
+  }),
+  wrcPerson({
+    id: "wrc-martijn-wydaeghe",
+    name: "Martijn Wydaeghe",
+    role: "Co-Driver",
     team: "Hyundai Shell Mobis World Rally Team",
-    nationality: "New Zealand",
-    series: "WRC",
-    bio: "New Zealand rally driver returning to top-level WRC competition with Hyundai machinery.",
-  },
-  {
-    id: "wrc-dani-sordo",
-    name: "Dani Sordo",
-    discipline: "Rally",
-    achievements: [
-      "Official WRC Rally1 driver for Hyundai in the 2026 season.",
-      "Veteran WRC winner with long-standing top-class rally experience.",
-    ],
-    active: true,
-    role: "Driver",
+    nationality: "Belgium",
+  }),
+  wrcPerson({
+    id: "wrc-adrien-fourmaux",
+    name: "Adrien Fourmaux",
     team: "Hyundai Shell Mobis World Rally Team",
-    nationality: "Spain",
-    series: "WRC",
-    bio: "Spanish WRC veteran valued for consistency, setup feedback and event management.",
-  },
-  {
+    nationality: "France",
+    achievements: ["Hyundai Rally1 driver in the 2026 field.", "Front-running pace on asphalt and mixed-surface rallies."],
+  }),
+  wrcPerson({
     id: "wrc-alexandre-coria",
     name: "Alexandre Coria",
-    discipline: "Rally",
-    achievements: [
-      "Official WRC co-driver for Hyundai in the 2026 season.",
-      "World-level co-driver pairing with Adrien Fourmaux.",
-    ],
-    active: true,
     role: "Co-Driver",
     team: "Hyundai Shell Mobis World Rally Team",
     nationality: "France",
-    series: "WRC",
-    bio: "French co-driver working at Rally1 level in the WRC with Adrien Fourmaux.",
-  },
-  {
-    id: "wrc-enni-malkonen",
-    name: "Enni Malkonen",
-    discipline: "Rally",
-    achievements: [
-      "Official WRC co-driver for Hyundai in the 2026 season.",
-      "Part of Hyundai's Rally1 programme on the world stage.",
-    ],
-    active: true,
-    role: "Co-Driver",
+  }),
+  wrcPerson({
+    id: "wrc-hayden-paddon",
+    name: "Hayden Paddon",
     team: "Hyundai Shell Mobis World Rally Team",
-    nationality: "Finland",
-    series: "WRC",
-    bio: "Finnish co-driver competing in the WRC Rally1 field with Esapekka Lappi.",
-  },
-  {
-    id: "wrc-martijn-wydaeghe",
-    name: "Martijn Wydaeghe",
-    discipline: "Rally",
-    achievements: [
-      "Official WRC co-driver for Hyundai in the 2026 season.",
-      "Regular part of Hyundai's top-line Rally1 championship campaigns.",
-    ],
-    active: true,
-    role: "Co-Driver",
-    team: "Hyundai Shell Mobis World Rally Team",
-    nationality: "Belgium",
-    series: "WRC",
-    bio: "Belgian co-driver competing at the front of the Rally1 field alongside Thierry Neuville.",
-  },
-  {
+    nationality: "New Zealand",
+    achievements: ["WRC rally winner returning to Rally1 competition.", "Experienced gravel and rough-condition specialist."],
+  }),
+  wrcPerson({
     id: "wrc-john-kennard",
     name: "John Kennard",
-    discipline: "Rally",
-    achievements: [
-      "Official WRC co-driver for Hyundai in the 2026 season.",
-      "Extensive international rally experience in world competition.",
-    ],
-    active: true,
     role: "Co-Driver",
     team: "Hyundai Shell Mobis World Rally Team",
     nationality: "New Zealand",
-    series: "WRC",
-    bio: "New Zealand co-driver bringing veteran experience to Hyundai's Rally1 operation.",
-  },
-  {
+  }),
+  wrcPerson({
+    id: "wrc-esapekka-lappi",
+    name: "Esapekka Lappi",
+    team: "Hyundai Shell Mobis World Rally Team",
+    nationality: "Finland",
+    achievements: ["WRC rally winner.", "Experienced Rally1 driver with strong gravel pace."],
+  }),
+  wrcPerson({
+    id: "wrc-enni-malkonen",
+    name: "Enni Malkonen",
+    role: "Co-Driver",
+    team: "Hyundai Shell Mobis World Rally Team",
+    nationality: "Finland",
+  }),
+  wrcPerson({
+    id: "wrc-dani-sordo",
+    name: "Dani Sordo",
+    team: "Hyundai Shell Mobis World Rally Team",
+    nationality: "Spain",
+    achievements: ["Veteran WRC rally winner.", "Long-standing top-class rally driver with deep Hyundai experience."],
+  }),
+  wrcPerson({
     id: "wrc-candido-carrera",
     name: "Candido Carrera",
-    discipline: "Rally",
-    achievements: [
-      "Official WRC co-driver for Hyundai in the 2026 season.",
-      "Top-class international rally navigator in Rally1 competition.",
-    ],
-    active: true,
     role: "Co-Driver",
     team: "Hyundai Shell Mobis World Rally Team",
     nationality: "Spain",
-    series: "WRC",
-    bio: "Spanish co-driver competing in the WRC Rally1 field with Dani Sordo.",
-  },
-  {
-    id: "wrc-andrew-wheatley",
-    name: "Andrew Wheatley",
-    discipline: "Rally",
-    achievements: [
-      "Official team principal of Hyundai Shell Mobis World Rally Team in 2026.",
-      "Leads Hyundai's Rally1 operation in the world championship.",
-    ],
-    active: true,
-    role: "Team Principal",
-    team: "Hyundai Shell Mobis World Rally Team",
-    nationality: "United Kingdom",
-    series: "WRC",
-    bio: "Team principal responsible for Hyundai's world rally programme and Rally1 operation.",
-  },
+  }),
+  wrcPerson({
+    id: "wrc-gregoire-munster",
+    name: "Gregoire Munster",
+    team: "M-Sport Ford World Rally Team",
+    nationality: "Luxembourg",
+    achievements: ["M-Sport Ford Rally1 driver.", "Part of Ford's current top-class WRC programme."],
+  }),
+  wrcPerson({
+    id: "wrc-louis-louka",
+    name: "Louis Louka",
+    role: "Co-Driver",
+    team: "M-Sport Ford World Rally Team",
+    nationality: "Belgium",
+  }),
+  wrcPerson({
+    id: "wrc-joshua-mcerlean",
+    name: "Joshua McErlean",
+    team: "M-Sport Ford World Rally Team",
+    nationality: "Ireland",
+    achievements: ["M-Sport Ford Rally1 driver.", "Irish Rally1 representative in the 2026 field."],
+  }),
+  wrcPerson({
+    id: "wrc-eoin-treacy",
+    name: "Eoin Treacy",
+    role: "Co-Driver",
+    team: "M-Sport Ford World Rally Team",
+    nationality: "Ireland",
+  }),
+  wrcPerson({
+    id: "wrc-jon-armstrong",
+    name: "Jon Armstrong",
+    team: "M-Sport Ford World Rally Team",
+    nationality: "Ireland",
+    achievements: ["Promoted from European rally competition into Rally1 action.", "M-Sport Ford Rally1 driver in the 2026 field."],
+  }),
+  wrcPerson({
+    id: "wrc-shane-byrne",
+    name: "Shane Byrne",
+    role: "Co-Driver",
+    team: "M-Sport Ford World Rally Team",
+    nationality: "Ireland",
+  }),
 ];
